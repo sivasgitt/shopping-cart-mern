@@ -1,1 +1,0 @@
-echo "# MERN Ecommerce App"

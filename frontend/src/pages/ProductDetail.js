@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import {toast} from 'react-toastify';
 
-export default function ProductDetail() {
+
+export default function ProductDetail({cartItems, setCartItems}) {
     const [product, setProduct] = useState(null);
+    const [qty, setQty] = useState(1);
     const {id} = useParams();
 
     useEffect(() => {
@@ -10,6 +13,27 @@ export default function ProductDetail() {
         .then(res => res.json())
         .then(res => setProduct(res.product))
       },[])
+
+      function addToCart() {
+        const itemExists = cartItems.find((item) => item.product._id == product._id)
+        if(!itemExists) {
+          const newItem = {product, qty};
+          setCartItems((state) => [...state, newItem]);
+          toast.success("Item added to cart successfully!")
+        }
+      }
+
+      function increaseQty() {
+        if(product.stock == qty) {
+          return;
+        }
+        setQty((state) => state + 1);
+      }
+
+      function decreaseQty() {
+        if(qty > 1){ 
+          setQty((state) => state - 1);}
+      }      
 
   return (
     <div className="container container-fluid">
@@ -37,23 +61,23 @@ export default function ProductDetail() {
 
           <p id="product_price">${product?.price}</p>
           <div className="stockCounter d-inline">
-            <span className="btn btn-danger minus">-</span>
+            <span className="btn btn-danger minus" onClick={decreaseQty}>-</span>
 
             <input
               type="number"
               className="form-control count d-inline"
-              value="1"
+              value={qty}
               readOnly
             />
 
-            <span className="btn btn-primary plus">+</span>
+            <span className="btn btn-primary plus" onClick={increaseQty}>+</span>
           </div>
-          <button
+          <button 
             type="button"
+            onClick={addToCart}
+            disabled = {product?.stock == 0}
             id="cart_btn"
-            className="btn btn-primary d-inline ml-4"
-          >
-            Add to Cart
+            className="btn btn-primary d-inline ml-4">Add to Cart
           </button>
 
           <hr />

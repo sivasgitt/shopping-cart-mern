@@ -1,8 +1,8 @@
 export default function Footer() {
   return (
-    <footer className="py-1 bg-dark">
+    <footer>
       <p className="text-center text-white mt-1 ">
-        JVLcart - 2023-2024, All Rights Reserved
+        eHub - 2026-2027, All Rights Reserved
       </p>
     </footer>
   );
